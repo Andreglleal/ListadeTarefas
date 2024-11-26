@@ -22,17 +22,15 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "listaTarefas") {
                     composable(
                         route = "listaTarefas"
-                    ){
+                    ) {
                         ListaTarefas(navController)
                     }
                     composable(
                         route = "salvarTarefas"
-                    ){
+                    ) {
                         SalvarTarefas(navController)
                     }
-
                 }
-
             }
         }
     }
