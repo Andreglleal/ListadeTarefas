@@ -72,6 +72,8 @@ dependencies {
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
 
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

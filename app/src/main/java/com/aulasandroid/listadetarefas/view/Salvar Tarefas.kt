@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.aulasandroid.listadetarefas.componentes.Botao
 import com.aulasandroid.listadetarefas.componentes.CaixaDeTexto
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,11 +108,11 @@ fun SalvarTarefas(
                 maxLines = 6,
                 KeyboardType = KeyboardType.Text
             )
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
                 Text(text = "Nivel de Prioridade")
 
                 RadioButton(
@@ -153,6 +154,13 @@ fun SalvarTarefas(
                     )
                 )
             }
+            Botao(
+                onClick = {
+
+                },
+                modifier = Modifier.fillMaxWidth().height(80.dp).padding(20.dp),
+                texto ="Salvar"
+            )
         }
     }
 }
