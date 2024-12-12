@@ -1,6 +1,8 @@
 plugins {
+
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services")
 
 }
 
@@ -51,6 +53,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.common.ktx)
     val core_version = "1.15.0"
     val nav_version = "2.8.0"
 
@@ -73,6 +76,10 @@ dependencies {
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+     // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation("com.google.firebase:firebase-firestore")
 
 
     implementation(libs.androidx.core.ktx)

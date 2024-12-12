@@ -13,15 +13,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.aulasandroid.listadetarefas.R
 import com.aulasandroid.listadetarefas.itemlista.TarefaItem
 import com.aulasandroid.listadetarefas.model.Tarefa
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,33 +59,8 @@ fun ListaTarefas(
             }
         }, containerColor = Color.Black
     ) {
-        val listaTarefas : MutableList<Tarefa> = mutableListOf(
-            Tarefa(
-                titulo = "Jogar video game",
-                descricao = "ghgdkyhjbfwefwguywegfvfqecv",
-                prioridade = 0
-            ),
-            Tarefa(
-                titulo = "Estudar as Musicas de Domingo",
-                descricao = "ghgdkyhjbfwefwguywegfvfqecv",
-                prioridade = 1
-            ),
-            Tarefa(
-                titulo = "Estudar Android",
-                descricao = "ghgdkyhjbfwefwguywegfvfqecv",
-                prioridade = 2
-            ),
-            Tarefa(
-                titulo = "Ficar com a Familia",
-                descricao = "ghgdkyhjbfwefwguywegfvfqecv",
-                prioridade = 3
-            )
-        )
-        LazyColumn {
-          itemsIndexed(listaTarefas){position, _ ->
-              TarefaItem( position, listaTarefas)
 
-          }
+        LazyColumn {
 
         }
     }

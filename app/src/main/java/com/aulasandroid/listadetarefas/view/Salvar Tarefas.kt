@@ -1,6 +1,7 @@
 package com.aulasandroid.listadetarefas.view
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,19 +21,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.aulasandroid.listadetarefas.componentes.Botao
 import com.aulasandroid.listadetarefas.componentes.CaixaDeTexto
+import com.aulasandroid.listadetarefas.constantes.Constantes
+import com.aulasandroid.listadetarefas.repositorio.TarefasRepositorio
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -59,6 +62,10 @@ fun SalvarTarefas(
     var prioridadeTarefaBaixa = remember {
         mutableStateOf(false)
     }
+
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val tarefasRepositorio = TarefasRepositorio()
 
     Scaffold(
         topBar = {
@@ -157,8 +164,50 @@ fun SalvarTarefas(
             Botao(
                 onClick = {
 
+                    var mensagem = true
+
+                    scope.launch(Dispatchers.IO){
+                        if (tituloTarefa.value.isEmpty()){
+                            mensagem = false
+                        }else if (tituloTarefa.value.isNotEmpty() && descricaoTarefa.value.isEmpty() && prioridadeTarefaBaixa.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.PRIORIDADE_BAIXA)
+                            mensagem = true
+                        } else if (tituloTarefa.value.isNotEmpty() && descricaoTarefa.value.isEmpty() && prioridadeTarefaMedia.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.PRIORIDADE_MEDIA)
+                            mensagem = true
+                        } else if (tituloTarefa.value.isNotEmpty() && descricaoTarefa.value.isEmpty() && prioridadeTarefaAlta.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.PRIORIDADE_ALTA)
+                            mensagem = true
+                        } else if (tituloTarefa.value.isNotEmpty() && descricaoTarefa.value.isEmpty() && semprioridadeTarefa.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.SEM_PRIORIDADE)
+                            mensagem = true
+                        } else if (tituloTarefa.value.isNotEmpty() && prioridadeTarefaBaixa.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.PRIORIDADE_BAIXA)
+                            mensagem = true
+                        } else if (tituloTarefa.value.isNotEmpty() && prioridadeTarefaMedia.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.PRIORIDADE_MEDIA)
+                            mensagem = true
+                        } else if (tituloTarefa.value.isNotEmpty() && prioridadeTarefaAlta.value){
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.PRIORIDADE_ALTA)
+                            mensagem = true
+                        } else{
+                            tarefasRepositorio.salvarTarefa(tituloTarefa.value, descricaoTarefa.value,Constantes.SEM_PRIORIDADE)
+                            mensagem = true
+                        }
+                    }
+                    scope.launch(Dispatchers.Main){
+                        if (mensagem){
+                            Toast.makeText(context,"Tarefa Salva com sucesso!!!", Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
+                        }else{
+                            Toast.makeText(context,"Titulo da terefa é obrigatorio!!!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 },
-                modifier = Modifier.fillMaxWidth().height(80.dp).padding(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .padding(20.dp),
                 texto ="Salvar"
             )
         }
