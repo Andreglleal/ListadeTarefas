@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -20,7 +21,7 @@ import androidx.navigation.NavController
 import com.aulasandroid.listadetarefas.R
 import com.aulasandroid.listadetarefas.itemlista.TarefaItem
 import com.aulasandroid.listadetarefas.model.Tarefa
-
+import com.aulasandroid.listadetarefas.repositorio.TarefasRepositorio
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +30,8 @@ import com.aulasandroid.listadetarefas.model.Tarefa
 fun ListaTarefas(
     navController: NavController
 ) {
+    val tarefasRepositorio = TarefasRepositorio()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,9 +62,12 @@ fun ListaTarefas(
             }
         }, containerColor = Color.Black
     ) {
+        val listaTarefas = tarefasRepositorio.recuperarTarefas().collectAsState(mutableListOf()).value
 
         LazyColumn {
-
+            itemsIndexed(listaTarefas){ position,_,->
+                TarefaItem(position = position,listaTarefas = listaTarefas)
+            }
         }
     }
 }
