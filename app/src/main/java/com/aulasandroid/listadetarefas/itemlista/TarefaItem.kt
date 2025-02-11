@@ -1,46 +1,76 @@
 package com.aulasandroid.listadetarefas.itemlista
 
+import android.app.AlertDialog
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import com.aulasandroid.listadetarefas.R
 import com.aulasandroid.listadetarefas.model.Tarefa
+import com.aulasandroid.listadetarefas.repositorio.TarefasRepositorio
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun TarefaItem(
     position: Int,
-    listaTarefas: MutableList<Tarefa>
+    listaTarefas: MutableList<Tarefa>,
+    context: android.content.Context,
+    navController: NavController
 ) {
     val tituloTarefa = listaTarefas[position].titulo
     val descricaoTarefa = listaTarefas[position].descricao
     val prioridade = listaTarefas[position].prioridade
 
+    val scope = rememberCoroutineScope()
+    val tarefasRepositorio = TarefasRepositorio()
+
+    fun dialogDeletar() {
+
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle("Deletar tarefa")
+            .setMessage("Deseja excluir a tarefa?")
+            .setPositiveButton("Sim") { _, _ ->
+                tarefasRepositorio.deletarTarefa(tituloTarefa.toString())
+                scope.launch(Dispatchers.Main){
+                    listaTarefas.removeAt(position)
+                    navController.navigate("listaTarefas")
+                    Toast.makeText(context,"Sucesso ao deletar tarefa!",Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Não") { _, _ ->
+
+            }
+        .show()
+    }
+
     var nivelDePrioridade: String = when (prioridade) {
         0 -> {
             "Sem Prioridade"
         }
+
         1 -> {
             "Prioridade Baixa"
         }
+
         2 -> {
             "Prioridade Média"
         }
+
         else -> {
             "Prioridade Alta"
         }
@@ -49,12 +79,15 @@ fun TarefaItem(
         0 -> {
             Color.Black
         }
+
         1 -> {
             Color.Green
         }
+
         2 -> {
             Color.Yellow
         }
+
         else -> {
             Color.Red
         }
@@ -89,7 +122,7 @@ fun TarefaItem(
                     bottom.linkTo(parent.bottom, margin = 10.dp)
                 }
             )
-            Card (
+            Card(
                 colors = CardDefaults.cardColors(containerColor = color),
                 modifier = Modifier
                     .size(30.dp)
@@ -103,7 +136,7 @@ fun TarefaItem(
             }
             IconButton(
                 onClick = {
-
+                    dialogDeletar()
                 },
                 modifier = Modifier.constrainAs(btDeletar) {
                     top.linkTo(txtDescricao.bottom, margin = 10.dp)
@@ -112,10 +145,10 @@ fun TarefaItem(
                     bottom.linkTo(parent.bottom, margin = 10.dp)
                 }
             ) {
-               Image(
-                   imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
-                   contentDescription ="icone de deletar"
-               )
+                Image(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
+                    contentDescription = "icone de deletar"
+                )
             }
         }
     }
